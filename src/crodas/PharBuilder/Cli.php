@@ -18,13 +18,15 @@ function get_path($path)
 /**
  *  @Cli("phar:install", "Install a phar file")
  *  @Arg("path", OPTIONAL)
+ *  @Option("force")
  */
 function install($input, $output)
 {
     PharBuilder::checkCanCreatePhar();
+    $force = $input->getOption('force');
     $path  = get_path($input->getArgument('path') ?: 'build.yml');
     $build = new BuildFile($path);
-    $path  = $build->install();
+    $path  = $build->install($force);
     $output->writeLn("<info>Installed {$path}</info>");
 }
 

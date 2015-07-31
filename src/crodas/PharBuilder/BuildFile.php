@@ -30,10 +30,10 @@ class BuildFile
         $this->settings = $yaml;
     }
 
-    public function install()
+    public function install($force = false)
     {
         $phar = $this->settings['name'];
-        if (!is_file($phar)) {
+        if (!is_file($phar) || $force) {
             $this->build();
         }
         $exe = str_replace(".phar", "", $phar);

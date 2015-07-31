@@ -24,7 +24,11 @@ class PharBuilder
             return;
         }
         $php  = $_SERVER['_'];
-        $argv = array_merge([$php, '-d', 'phar.readonly=off'], $GLOBALS['argv']);
+        if (preg_match("@/php[0-9\\.]*$@", $php)) {
+            $argv = array_merge([$php, '-d', 'phar.readonly=off'], $GLOBALS['argv']);
+        } else {
+            $argv = array_merge(['/usr/bin/env', 'php', '-d', 'phar.readonly=off'], $GLOBALS['argv']);
+        }
         $builder = new ProcessBuilder($argv);
         $builder->setTimeout(300);
         $builder->getProcess()->run(function ($type, $buffer) {
