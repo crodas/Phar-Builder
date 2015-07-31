@@ -1,0 +1,23 @@
+{
+    "name": "crodas/phar-builder",
+    "description": "Build Phar like a boss",
+    "require": {
+        "crodas/cli": "^0.1",
+        "symfony/process": "^2.7",
+        "crodas/file-util": "^0.1.14",
+        "symfony/yaml": "^2.7",
+        "crodas/notoj": "^1.0.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "crodas": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cesar Rodas",
+            "email": "cesar@rodas.me"
+        }
+    ]
+}
