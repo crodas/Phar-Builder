@@ -5,6 +5,7 @@ namespace crodas\PharBuilder;
 use Phar;
 use Symfony\Component\Process\ProcessBuilder;
 use crodas\FileUtil\File;
+use Autoloader;
 use FileSystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -16,6 +17,7 @@ class PharBuilder
     protected $files = array();
     protected $filter;
     protected $stub;
+    protected $autoload;
     protected $dir;
 
     public static function checkCanCreatePhar()
@@ -45,6 +47,7 @@ class PharBuilder
         }
         $this->phar = new Phar($file);
         $this->tmp  = sys_get_temp_dir() . '/phar-' . uniqid(true);
+        $this->autoload = "autoload-" . uniqid(true) . ".php";
     }
 
     public function addFilter(Callable $fnc)
@@ -74,6 +77,7 @@ class PharBuilder
         }
         $stub = file_get_contents(__DIR__ . '/Stub.php');
         $stub = str_replace('__STUB__', var_export($path, true), $stub);
+        $stub = str_replace('__AUTOLOAD__', var_export($this->autoload, true), $stub);
         $this->stub = 'index-' . uniqid(true) . '.php';
         $this->addFile($this->stub, $stub);
     }
@@ -95,15 +99,18 @@ class PharBuilder
 
     public function build()
     {
-        $this->phar->startBuffering();
-        $this->phar->buildFromDirectory($this->tmp);
-        $this->phar->setSignatureAlgorithm(phar::SHA1);
         if ($this->stub) {
+            $autoload = new Autoloader\Generator($this->tmp);
+            $autoload->relativePaths()->IncludePSR0Autoloader(false);
+            $autoload->generate($this->tmp . "/" . $this->autoload, getcwd() . "/.phar-build-tmp");
             $this->phar->setStub(
                 "#!/usr/bin/env php\n"
                 . $this->phar->createDefaultStub($this->stub)
             );
         }
+        $this->phar->startBuffering();
+        $this->phar->buildFromDirectory($this->tmp);
+        $this->phar->setSignatureAlgorithm(phar::SHA1);
         $this->phar->stopBuffering();
     }
 }
