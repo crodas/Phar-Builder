@@ -16,7 +16,7 @@ function get_path($path)
 }
 
 /**
- *  @Cli("phar:install", "Install a phar file")
+ *  @Cli("install", "Install a phar file")
  *  @Arg("path", OPTIONAL)
  *  @Option("force")
  */
@@ -24,20 +24,20 @@ function install($input, $output)
 {
     PharBuilder::checkCanCreatePhar();
     $force = $input->getOption('force');
-    $path  = get_path($input->getArgument('path') ?: 'build.yml');
+    $path  = get_path($input->getArgument('path') ?: 'spec.yml');
     $build = new BuildFile($path);
     $path  = $build->install($force);
     $output->writeLn("<info>Installed {$path}</info>");
 }
 
 /**
- *  @Cli("phar:build", "Build script")
+ *  @Cli("build", "Build script")
  *  @Arg("path", OPTIONAL)
  */
 function main($input, $output)
 {
     PharBuilder::checkCanCreatePhar();
-    $path  = get_path($input->getArgument('path') ?: 'build.yml');
+    $path  = get_path($input->getArgument('path') ?: 'spec.yml');
     $build = new BuildFile($path);
     $output->writeLn("<info>Write phar using {$path}</info>");
     $output->writeLn("<info>Created " . $build->build() . "</info>");

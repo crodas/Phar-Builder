@@ -7,32 +7,17 @@ use Symfony\Component\Yaml\Yaml;
 
 class BuildFile
 {
-    protected $file;
+    protected $config;
     protected $yaml;
 
     public function __construct($file)
     {
-        if (!is_file($file)) {
-            throw new RuntimeException("$file is not a file");
-        }
-        $this->file = $file;
-        $this->parse();
-    }
-
-    public function parse()
-    {
-        $yaml = Yaml::parse(file_get_contents($this->file));
-        foreach (['name', 'include'] as $req) {
-            if (empty($yaml[$req])) {
-                throw new RuntimeException("$req property missing in {$this->file}");
-            }
-        }
-        $this->settings = $yaml;
+        $this->config = new Configuration($file);
     }
 
     public function install($force = false)
     {
-        $phar = $this->settings['name'];
+        $phar = $this->config->name;
         if (!is_file($phar) || $force) {
             $this->build();
         }
@@ -52,16 +37,16 @@ class BuildFile
 
     public function build()
     {
-        $builder = new PharBuilder($this->settings['name']);
-        foreach ((array)$this->settings['include'] as $include) {
-            $builder->addDir(getcwd() . '/' . $include, $include);
+        $builder = new PharBuilder($this->config->name);
+        foreach ($this->config->files as $file) {
+            $builder->addFile($file, getcwd() . '/'  . $file);
         }
-        if (!empty($this->settings['cli'])) {
-            $builder->addFile($this->settings['cli'], getcwd() . '/' . $this->settings['cli']);
-            $builder->mainScript($this->settings['cli']);
+        if ($this->config->main) {
+            $builder->addFile($this->config->main);
+            $builder->mainScript($this->config->main);
         }
         $builder->build();
-        return $this->settings['name'];
+        return $this->config->name;
     }
 }
 

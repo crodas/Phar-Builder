@@ -82,6 +82,13 @@ class PharBuilder
         $this->addFile($this->stub, $stub);
     }
 
+    public function addFiles(Array $files)
+    {
+        foreach ($files as $file) {
+            $this->AddFile($file, getcwd() . '/'  . $file);
+        }
+    }
+
     public function addFile($name, $path = NULL)
     {
         if ($path == NULL) {

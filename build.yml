@@ -1,3 +1,0 @@
-name: phar-builder.phar
-include: [src, vendor]
-cli: cli.php

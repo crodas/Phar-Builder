@@ -1,0 +1,5 @@
+name: phar-builder.phar
+files:  
+    - src: { name: "*.php" }
+    - vendor: { exclude: ["Tests", "tests"] }
+main: cli.php
