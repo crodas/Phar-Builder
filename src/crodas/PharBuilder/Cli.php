@@ -21,7 +21,7 @@ function get_path($path)
  */
 function from_composer($input, $output)
 {
-    $file = 'composer.json';
+    $file = getcwd() . '/composer.json';
     if (!is_file($file)) {
         throw new RuntimeException("Cannot find composer.json");
     }
@@ -45,7 +45,7 @@ function from_composer($input, $output)
         'files' => $files,
     );
 
-    echo Yaml::dump($spec, 3);
+    file_put_contents(getcwd() . '/spec.yml', Yaml::dump($spec, 3));
 }
 
 /**
