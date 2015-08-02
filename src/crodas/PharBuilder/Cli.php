@@ -3,6 +3,7 @@
 namespace crodas\PharBuilder;
 
 use RuntimeException;
+use Symfony\Component\Yaml\Yaml;
 
 function get_path($path)
 {
@@ -13,6 +14,38 @@ function get_path($path)
     }
 
     throw new RuntimeException("Cannot find file $path");
+}
+
+/**
+ *  @Cli("composer", "Build a spec.yml file based on your composer.json")
+ */
+function from_composer($input, $output)
+{
+    $file = 'composer.json';
+    if (!is_file($file)) {
+        throw new RuntimeException("Cannot find composer.json");
+    }
+    $composer = json_decode(file_get_contents('composer.json'), true);
+    foreach (array('autoload', 'name') as $name) {
+        if (empty($composer[$name])) {
+            throw new RuntimeException("Composer doesn't have $name property");
+        }
+    }
+
+    $files = array();
+    foreach ($composer['autoload'] as $desc) {
+        foreach ($desc as $file) {
+            $files[] = $file;
+        }
+    }
+    $files[] = array('vendor' => array("exclude" => array("tests", "Tests")));
+
+    $spec = array(
+        'name' => substr(strstr($composer['name'], "/"), 1) . ".phar",
+        'files' => $files,
+    );
+
+    echo Yaml::dump($spec, 3);
 }
 
 /**
