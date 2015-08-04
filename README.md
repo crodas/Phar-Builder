@@ -4,6 +4,17 @@ Build Phar like a boss.
 
 *This is a work in process*.
 
+## How to install
+
+You need to [Composer](https://getcomposer.org/) and PHP with phar enabled.
+
+```bash
+git clone https://github.com/crodas/Phar-Builder.git
+cd Phar-Builder
+composer install
+php cli.php install
+```
+
 ## Why?
 
 Build phar files should be really simple.
