@@ -85,7 +85,7 @@ class PharBuilder
     public function addFiles(Array $files)
     {
         foreach ($files as $file) {
-            $this->AddFile($file, getcwd() . '/'  . $file);
+            $this->addFile($file, getcwd() . '/'  . $file);
         }
     }
 

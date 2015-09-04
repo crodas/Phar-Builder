@@ -42,7 +42,7 @@ class BuildFile
             $builder->addFile($file, getcwd() . '/'  . $file);
         }
         if ($this->config->main) {
-            $builder->addFile($this->config->main);
+            $builder->addFile($this->config->main, getcwd() . '/' . $this->config->main);
             $builder->mainScript($this->config->main);
         }
         $builder->build();
