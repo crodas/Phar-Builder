@@ -6,7 +6,7 @@
         "symfony/process": "^2.7 | ^3.0",
         "crodas/file-util": "^0.1.14",
         "symfony/yaml": "^2.7 | ^3.0",
-        "crodas/notoj": "^1.0.6",
+        "crodas/notoj": ">=1.0.6",
         "crodas/autoloader": "^0.1.16",
         "symfony/finder": "^2.7 | ^3.0"
     },
